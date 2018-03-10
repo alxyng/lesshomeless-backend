@@ -27,7 +27,7 @@ func handleRequest(context context.Context,
 	userService, err := helpers.CreateUserService()
 	if err != nil {
 		log.Printf("error creating user service: %v\n", err)
-		return createErrorResponse()
+		return helpers.CreateErrorResponse()
 	}
 
 	_, ok := request.Headers["Authorization"]
@@ -35,7 +35,7 @@ func handleRequest(context context.Context,
 		u, err := userService.CreateUser()
 		if err != nil {
 			log.Printf("error creating user: %v\n", err)
-			return createErrorResponse()
+			return helpers.CreateErrorResponse()
 		}
 
 		return createMeResponse(u.Id)
@@ -77,23 +77,6 @@ func handleRequest(context context.Context,
 	return events.APIGatewayProxyResponse{
 		Body:       string(data),
 		StatusCode: 200,
-	}, nil
-}
-
-type errorResponse struct {
-	Error string `json:"error"`
-}
-
-func createErrorResponse() (events.APIGatewayProxyResponse, error) {
-	resp := errorResponse{
-		Error: "Internal server error",
-	}
-
-	data, _ := json.Marshal(resp)
-
-	return events.APIGatewayProxyResponse{
-		Body:       string(data),
-		StatusCode: 500,
 	}, nil
 }
 
