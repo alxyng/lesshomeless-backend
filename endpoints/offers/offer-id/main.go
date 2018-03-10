@@ -14,8 +14,22 @@ import (
 func handleRequest(context context.Context,
 	request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
+	if request.HTTPMethod == "DELETE" {
+		return delete(request.PathParameters["id"])
+	} else {
+		return get(request.PathParameters["id"])
+	}
+}
+
+func delete(id string) (events.APIGatewayProxyResponse, error) {
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+	}, nil
+}
+
+func get(id string) (events.APIGatewayProxyResponse, error) {
 	o := models.Offer{
-		Id:        request.PathParameters["id"],
+		Id:        id,
 		Name:      string("Cool offer bro"),
 		CreatedOn: time.Now(),
 		CreatedBy: uuid.NewV4().String(),
