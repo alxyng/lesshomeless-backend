@@ -2,15 +2,13 @@ package models
 
 import (
 	"time"
-
-	"github.com/satori/uuid"
 )
 
 type Offer struct {
-	Id          uuid.UUID    `json:"id"`
+	Id          string       `json:"id"`
 	Name        string       `json:"name"`
 	CreatedOn   time.Time    `json:"createdOn"`
-	CreatedBy   uuid.UUID    `json:"createdBy"`
+	CreatedBy   string       `json:"createdBy"`
 	Location    Location     `json:"location"`
 	Reservation *Reservation `json:"reservation"`
 }
@@ -21,7 +19,7 @@ type Location struct {
 }
 
 type Reservation struct {
-	ReservedBy   uuid.UUID `json:"reservedBy"`
+	ReservedBy   string    `json:"reservedBy"`
 	ReservedOn   time.Time `json:"reservedOn"`
 	Acknowledged bool      `json:"acknowledged"`
 }

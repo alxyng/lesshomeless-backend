@@ -16,26 +16,26 @@ func handleRequest(context context.Context,
 
 	o := []models.Offer{
 		models.Offer{
-			Id:        uuid.NewV4(),
+			Id:        uuid.NewV4().String(),
 			Name:      string("Cool offer bro"),
 			CreatedOn: time.Now(),
-			CreatedBy: uuid.NewV4(),
+			CreatedBy: uuid.NewV4().String(),
 			Location: models.Location{
 				Lat:  52.948956,
 				Long: -1.150940,
 			},
 		},
 		models.Offer{
-			Id:        uuid.NewV4(),
+			Id:        uuid.NewV4().String(),
 			Name:      string("Hey come reserve this"),
 			CreatedOn: time.Now(),
-			CreatedBy: uuid.NewV4(),
+			CreatedBy: uuid.NewV4().String(),
 			Location: models.Location{
 				Lat:  52.948956,
 				Long: -1.150940,
 			},
 			Reservation: &models.Reservation{
-				ReservedBy:   uuid.NewV4(),
+				ReservedBy:   uuid.NewV4().String(),
 				ReservedOn:   time.Now(),
 				Acknowledged: false,
 			},
