@@ -16,6 +16,14 @@ import (
 func handleRequest(context context.Context,
 	request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
+	// userService, err := helpers.CreateUserService()
+	// if err != nil {
+	// 	log.Printf("error creating user service: %v\n", err)
+	// 	return createErrorResponse()
+	// }
+	//
+	// userService.CreateUser()
+
 	o := models.Me{
 		Giving: models.Offer{
 			Id:        uuid.NewV4().String(),
@@ -52,6 +60,23 @@ func handleRequest(context context.Context,
 	return events.APIGatewayProxyResponse{
 		Body:       string(data),
 		StatusCode: 200,
+	}, nil
+}
+
+type errorResponse struct {
+	Error string `json:"error"`
+}
+
+func createErrorResponse() (events.APIGatewayProxyResponse, error) {
+	resp := errorResponse{
+		Error: "Internal server error",
+	}
+
+	data, _ := json.Marshal(resp)
+
+	return events.APIGatewayProxyResponse{
+		Body:       string(data),
+		StatusCode: 500,
 	}, nil
 }
 

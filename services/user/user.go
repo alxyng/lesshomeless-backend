@@ -1,4 +1,4 @@
-package services
+package user
 
 import "github.com/nullseed/lesshomeless-backend/models"
 
