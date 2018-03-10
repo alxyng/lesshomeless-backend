@@ -54,43 +54,9 @@
   version = "v1.33.0"
 
 [[projects]]
-  name = "github.com/go-redis/redis"
-  packages = [
-    ".",
-    "internal",
-    "internal/consistenthash",
-    "internal/hashtag",
-    "internal/pool",
-    "internal/proto",
-    "internal/singleflight",
-    "internal/util"
-  ]
-  revision = "9133634a132e00309476e2d9acbf0c8058d4c888"
-  version = "v6.10.0"
-
-[[projects]]
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
   revision = "0b12d6b5"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/lib/pq"
-  packages = [
-    ".",
-    "oid"
-  ]
-  revision = "88edab0803230a3898347e77b474f8c1820a1f20"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/nullseed/application-api"
-  packages = [
-    "entities/token",
-    "entities/user",
-    "services"
-  ]
-  revision = "1c11e180b2bac7c2377756b31725f7489f352fff"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -99,29 +65,14 @@
   version = "v0.8.0"
 
 [[projects]]
-  name = "github.com/satori/go.uuid"
-  packages = ["."]
-  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
-  version = "v1.2.0"
-
-[[projects]]
   name = "github.com/satori/uuid"
   packages = ["."]
   revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
   version = "v1.2.0"
 
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/crypto"
-  packages = [
-    "bcrypt",
-    "blowfish"
-  ]
-  revision = "c7dcf104e3a7a1417abc0230cb0d5240d764159d"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5b5f7bc2db2d42df8d5d8c017f60870d3321dc247b197df49e69edb678e5216c"
+  inputs-digest = "531953acf823e6fa8fedf60e5136fecce2ec992bac8d71929a710b7a1702d2c6"
   solver-name = "gps-cdcl"
   solver-version = 1
