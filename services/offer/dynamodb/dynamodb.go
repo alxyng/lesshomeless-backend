@@ -90,6 +90,10 @@ func (s DynamoDBOfferService) GetAllOffers() ([]models.Offer, error) {
 }
 
 func (s DynamoDBOfferService) GetOffersById(offerIDs []string) ([]models.Offer, error) {
+	if offerIDs == nil {
+		return nil, nil
+	}
+
 	var keys []map[string]*dynamodb.AttributeValue
 
 	for _, id := range offerIDs {
