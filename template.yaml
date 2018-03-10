@@ -8,6 +8,7 @@ Resources:
     Properties:
       Runtime: go1.x
       Handler: main
+      CodeUri: ./endpoints/me
       Events:
         Api:
           Type: Api
