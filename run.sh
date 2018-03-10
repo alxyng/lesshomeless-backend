@@ -1,3 +1,5 @@
 #!/bin/bash
 
-sam local start-api
+set -e
+
+sam local start-api --docker-network lesshomelessbackend_lesshomeless

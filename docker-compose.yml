@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+    db:
+        image: dwmkerr/dynamodb
+        hostname: db
+        ports:
+            - "8000:8000"
+        networks:
+            - lesshomeless
+
+networks:
+    lesshomeless:
+        driver: bridge
