@@ -24,7 +24,7 @@ func handleRequest(context context.Context,
 		return helpers.CreateInternalServerErrorResponse()
 	}
 
-	_, ok := request.Headers["Authorization"]
+	userID, ok := request.Headers["Authorization"]
 	if !ok {
 		u, err := userService.CreateUser()
 		if err != nil {
@@ -35,18 +35,27 @@ func handleRequest(context context.Context,
 		return createMeResponse(u.Id)
 	}
 
-	o := models.Me{
-		Giving: models.Offer{
-			Id:        uuid.NewV4().String(),
-			Name:      string("Cool offer bro"),
-			CreatedOn: time.Now(),
-			CreatedBy: uuid.NewV4().String(),
-			Location: models.Location{
-				Lat:  52.948956,
-				Long: -1.150940,
-			},
-		},
-		Reserved: models.Offer{
+	u, err := userService.GetUser(userID)
+	if err != nil {
+		log.Printf("error getting user: %v\n", err)
+		return helpers.CreateUnauthorizedResponse()
+	}
+
+	offerService, err := helpers.CreateOfferService()
+	if err != nil {
+		log.Printf("error creating offer service: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
+
+	giving, err := offerService.GetOffersById(u.Offers)
+	if err != nil {
+		log.Printf("error getting user's offers: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
+
+	o := meResponse{
+		Giving: giving,
+		Reserved: &models.Offer{
 			Id:        uuid.NewV4().String(),
 			Name:      string("Hey come reserve this"),
 			CreatedOn: time.Now(),
@@ -75,9 +84,9 @@ func handleRequest(context context.Context,
 }
 
 type meResponse struct {
-	Giving   *models.Offer `json:"giving"`
-	Reserved *models.Offer `json:"reserved"`
-	UserID   string        `json:"userId,omitempty"`
+	Giving   []models.Offer `json:"giving"`
+	Reserved *models.Offer  `json:"reserved"`
+	UserID   string         `json:"userId,omitempty"`
 }
 
 func createMeResponse(userID string) (events.APIGatewayProxyResponse, error) {

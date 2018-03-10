@@ -88,3 +88,39 @@ func (s DynamoDBOfferService) GetAllOffers() ([]models.Offer, error) {
 
 	return o, nil
 }
+
+func (s DynamoDBOfferService) GetOffersById(offerIDs []string) ([]models.Offer, error) {
+	var keys []map[string]*dynamodb.AttributeValue
+
+	for _, id := range offerIDs {
+		keys = append(keys, map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(id),
+			},
+		})
+	}
+
+	input := &dynamodb.BatchGetItemInput{
+		RequestItems: map[string]*dynamodb.KeysAndAttributes{
+			tableName: {
+				Keys: keys,
+			},
+		},
+	}
+
+	output, err := s.db.BatchGetItem(input)
+	if err != nil {
+		return nil, errors.Wrap(err, "error getting offers")
+	}
+	if output.Responses == nil {
+		return nil, nil
+	}
+
+	var o []models.Offer
+	dynamodbattribute.UnmarshalListOfMaps(output.Responses[tableName], &o)
+	if err != nil {
+		return nil, errors.Wrap(err, "error unmarshalling items")
+	}
+
+	return o, nil
+}
