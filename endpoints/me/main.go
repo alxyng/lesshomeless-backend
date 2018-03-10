@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/satori/uuid"
@@ -96,11 +97,15 @@ func createMeResponse(userID string) (events.APIGatewayProxyResponse, error) {
 		UserID:   userID,
 	}
 
-	data, _ := json.Marshal(resp)
+	data, err := json.Marshal(resp)
+	if err != nil {
+		log.Printf("error marshalling response: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
 
 	return events.APIGatewayProxyResponse{
 		Body:       string(data),
-		StatusCode: 500,
+		StatusCode: http.StatusOK,
 	}, nil
 }
 
