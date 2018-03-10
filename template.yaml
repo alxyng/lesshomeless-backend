@@ -39,3 +39,15 @@ Resources:
           Properties:
             Path: /offers/{id}
             Method: any
+  Offers/Offer-Id/Reservation:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: go1.x
+      Handler: main
+      CodeUri: ./endpoints/offers/offer-id/reservation
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /offers/{id}/reservation
+            Method: any
