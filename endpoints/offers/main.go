@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -14,6 +15,29 @@ import (
 func handleRequest(context context.Context,
 	request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
+	if request.HTTPMethod == "POST" {
+		return post(request.Body)
+	} else {
+		return get()
+	}
+}
+
+func post(body string) (events.APIGatewayProxyResponse, error) {
+	var offer models.Offer
+	err := json.Unmarshal([]byte(body), &offer)
+
+	if err == nil {
+		fmt.Printf("Got offer: %#v\n", offer)
+	} else {
+		fmt.Printf("Failed to deserialize offer %v\n", err)
+	}
+
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+	}, nil
+}
+
+func get() (events.APIGatewayProxyResponse, error) {
 	o := []models.Offer{
 		models.Offer{
 			Id:        uuid.NewV4().String(),
