@@ -1,6 +1,6 @@
 package models
 
-import "github.com/pborman/uuid"
+import "github.com/satori/uuid"
 
 type User struct {
 	Id uuid.UUID `json:"id"`

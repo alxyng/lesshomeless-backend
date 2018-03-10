@@ -4,6 +4,7 @@
 [[projects]]
   name = "github.com/aws/aws-lambda-go"
   packages = [
+    "events",
     "lambda",
     "lambda/messages",
     "lambdacontext"
@@ -11,9 +12,15 @@
   revision = "fafa7e49388b8991caf99308e80655ba91816b72"
   version = "v1.1.0"
 
+[[projects]]
+  name = "github.com/satori/uuid"
+  packages = ["."]
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b8dd0029a4fdeb7af0a8e1ea1aa7244250ec6eb9d9a98d2816e4dc05cb972b29"
+  inputs-digest = "216ad9a53c3b3d24f9f051993df4b1df10770c5fc568bacba6356c2098b6dd7c"
   solver-name = "gps-cdcl"
   solver-version = 1
