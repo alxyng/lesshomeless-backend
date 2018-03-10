@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"time"
 
 	"github.com/satori/uuid"
@@ -10,19 +11,35 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 
+	"github.com/nullseed/lesshomeless-backend/helpers"
 	"github.com/nullseed/lesshomeless-backend/models"
 )
+
+type meResponse struct {
+	Giving   *models.Offer `json:"giving"`
+	Reserved *models.Offer `json:"reserved"`
+	UserID   string        `json:"userId,omitempty"`
+}
 
 func handleRequest(context context.Context,
 	request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
-	// userService, err := helpers.CreateUserService()
-	// if err != nil {
-	// 	log.Printf("error creating user service: %v\n", err)
-	// 	return createErrorResponse()
-	// }
-	//
-	// userService.CreateUser()
+	userService, err := helpers.CreateUserService()
+	if err != nil {
+		log.Printf("error creating user service: %v\n", err)
+		return createErrorResponse()
+	}
+
+	_, ok := request.Headers["Authorization"]
+	if !ok {
+		u, err := userService.CreateUser()
+		if err != nil {
+			log.Printf("error creating user: %v\n", err)
+			return createErrorResponse()
+		}
+
+		return createMeResponse(u.Id)
+	}
 
 	o := models.Me{
 		Giving: models.Offer{
@@ -70,6 +87,21 @@ type errorResponse struct {
 func createErrorResponse() (events.APIGatewayProxyResponse, error) {
 	resp := errorResponse{
 		Error: "Internal server error",
+	}
+
+	data, _ := json.Marshal(resp)
+
+	return events.APIGatewayProxyResponse{
+		Body:       string(data),
+		StatusCode: 500,
+	}, nil
+}
+
+func createMeResponse(userID string) (events.APIGatewayProxyResponse, error) {
+	resp := meResponse{
+		Giving:   nil,
+		Reserved: nil,
+		UserID:   userID,
 	}
 
 	data, _ := json.Marshal(resp)
