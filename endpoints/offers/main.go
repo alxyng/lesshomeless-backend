@@ -62,7 +62,13 @@ func post(request events.APIGatewayProxyRequest, userSvc user.UserService, svc o
 
 	o, err = svc.CreateOffer(o)
 	if err != nil {
-		log.Printf("error getting offer: %v\n", err)
+		log.Printf("error creating offer: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
+
+	u, err = userSvc.AssignOfferToUser(u, o.Id)
+	if err != nil {
+		log.Printf("error assigning offer to user: %v\n", err)
 		return helpers.CreateInternalServerErrorResponse()
 	}
 

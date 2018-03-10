@@ -68,3 +68,22 @@ func (s DynamoDBUserService) GetUser(userID string) (*models.User, error) {
 
 	return &u, nil
 }
+
+func (s DynamoDBUserService) AssignOfferToUser(u *models.User, offerId string) (*models.User, error) {
+	u.Offers = append(u.Offers, offerId)
+
+	item, err := dynamodbattribute.MarshalMap(u)
+	if err != nil {
+		return nil, errors.Wrap(err, "error marshalling user")
+	}
+
+	_, err = s.db.PutItem(&dynamodb.PutItemInput{
+		Item:      item,
+		TableName: aws.String(tableName),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "error putting user")
+	}
+
+	return u, nil
+}
