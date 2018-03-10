@@ -2,7 +2,7 @@
 
 set -e
 
-declare -a endpoints=("me" "offers")
+declare -a endpoints=("me" "offers" "offers/offer-id")
 
 for i in "${endpoints[@]}"
 do
