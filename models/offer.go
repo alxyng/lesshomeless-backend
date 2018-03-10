@@ -10,7 +10,7 @@ type Offer struct {
 	CreatedOn   time.Time    `json:"createdOn"`
 	CreatedBy   string       `json:"createdBy"`
 	Location    Location     `json:"location"`
-	Reservation *Reservation `json:"reservation"`
+	Reservation *Reservation `json:"reservation,omitempty"`
 }
 
 type Location struct {
