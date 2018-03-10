@@ -9,6 +9,8 @@ import (
 	"github.com/satori/uuid"
 )
 
+const tableName = "users"
+
 type DynamoDBUserService struct {
 	db *dynamodb.DynamoDB
 }
@@ -19,23 +21,50 @@ func NewDynamoDBUserService(db *dynamodb.DynamoDB) DynamoDBUserService {
 	}
 }
 
-func (s DynamoDBUserService) CreateUser() (models.User, error) {
+func (s DynamoDBUserService) CreateUser() (*models.User, error) {
 	u := models.User{
 		Id: uuid.NewV4().String(),
 	}
 
 	item, err := dynamodbattribute.MarshalMap(u)
 	if err != nil {
-		return models.User{}, errors.Wrap(err, "error marshalling user")
+		return nil, errors.Wrap(err, "error marshalling user")
 	}
 
 	_, err = s.db.PutItem(&dynamodb.PutItemInput{
 		Item:      item,
-		TableName: aws.String("users"),
+		TableName: aws.String(tableName),
 	})
 	if err != nil {
-		return models.User{}, errors.Wrap(err, "error putting user")
+		return nil, errors.Wrap(err, "error putting user")
 	}
 
-	return u, nil
+	return &u, nil
+}
+
+func (s DynamoDBUserService) GetUser(userID string) (*models.User, error) {
+	input := &dynamodb.GetItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(userID),
+			},
+		},
+		TableName: aws.String(tableName),
+	}
+
+	output, err := s.db.GetItem(input)
+	if err != nil {
+		return nil, errors.Wrap(err, "error getting user")
+	}
+	if output.Item == nil {
+		return nil, nil
+	}
+
+	var u models.User
+	dynamodbattribute.UnmarshalMap(output.Item, &u)
+	if err != nil {
+		return nil, errors.Wrap(err, "error unmarshalling item")
+	}
+
+	return &u, nil
 }
