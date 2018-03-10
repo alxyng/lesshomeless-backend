@@ -15,12 +15,6 @@ import (
 	"github.com/nullseed/lesshomeless-backend/models"
 )
 
-type meResponse struct {
-	Giving   *models.Offer `json:"giving"`
-	Reserved *models.Offer `json:"reserved"`
-	UserID   string        `json:"userId,omitempty"`
-}
-
 func handleRequest(context context.Context,
 	request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
@@ -78,6 +72,12 @@ func handleRequest(context context.Context,
 		Body:       string(data),
 		StatusCode: 200,
 	}, nil
+}
+
+type meResponse struct {
+	Giving   *models.Offer `json:"giving"`
+	Reserved *models.Offer `json:"reserved"`
+	UserID   string        `json:"userId,omitempty"`
 }
 
 func createMeResponse(userID string) (events.APIGatewayProxyResponse, error) {

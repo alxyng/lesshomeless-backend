@@ -24,6 +24,19 @@ func CreateErrorResponse() (events.APIGatewayProxyResponse, error) {
 	}, nil
 }
 
+func CreateUnauthorizedResponse() (events.APIGatewayProxyResponse, error) {
+	resp := errorResponse{
+		Error: "Unauthorized",
+	}
+
+	data, _ := json.Marshal(resp)
+
+	return events.APIGatewayProxyResponse{
+		Body:       string(data),
+		StatusCode: http.StatusUnauthorized,
+	}, nil
+}
+
 func CreateNotFoundResponse() (events.APIGatewayProxyResponse, error) {
 	resp := errorResponse{
 		Error: "Not found",
