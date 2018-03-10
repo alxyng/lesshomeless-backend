@@ -37,6 +37,19 @@ func CreateUnauthorizedResponse() (events.APIGatewayProxyResponse, error) {
 	}, nil
 }
 
+func CreateBadRequestResponse() (events.APIGatewayProxyResponse, error) {
+	resp := errorResponse{
+		Error: "Bad request",
+	}
+
+	data, _ := json.Marshal(resp)
+
+	return events.APIGatewayProxyResponse{
+		Body:       string(data),
+		StatusCode: http.StatusBadRequest,
+	}, nil
+}
+
 func CreateNotFoundResponse() (events.APIGatewayProxyResponse, error) {
 	resp := errorResponse{
 		Error: "Not found",

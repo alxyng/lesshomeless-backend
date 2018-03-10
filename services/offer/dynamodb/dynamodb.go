@@ -69,3 +69,22 @@ func (s DynamoDBOfferService) CreateOffer(o models.Offer) (models.Offer, error) 
 
 	return o, nil
 }
+
+func (s DynamoDBOfferService) GetAllOffers() ([]models.Offer, error) {
+	input := &dynamodb.ScanInput{
+		TableName: aws.String(tableName),
+	}
+
+	output, err := s.db.Scan(input)
+	if err != nil {
+		return nil, errors.Wrap(err, "error getting offers")
+	}
+
+	var o []models.Offer
+	dynamodbattribute.UnmarshalListOfMaps(output.Items, &o)
+	if err != nil {
+		return nil, errors.Wrap(err, "error unmarshalling items")
+	}
+
+	return o, nil
+}
