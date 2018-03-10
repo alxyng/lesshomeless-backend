@@ -15,3 +15,15 @@ Resources:
           Properties:
             Path: /me
             Method: any
+  Offers:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: go1.x
+      Handler: main
+      CodeUri: ./endpoints/offers
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /offers
+            Method: any
