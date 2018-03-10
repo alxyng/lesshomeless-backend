@@ -11,7 +11,7 @@ import (
 	"github.com/satori/uuid"
 )
 
-const tableName = "offers"
+const tableName = "lhl-offers"
 
 type DynamoDBOfferService struct {
 	db *dynamodb.DynamoDB

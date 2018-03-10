@@ -9,7 +9,7 @@ import (
 	"github.com/satori/uuid"
 )
 
-const tableName = "users"
+const tableName = "lhl-users"
 
 type DynamoDBUserService struct {
 	db *dynamodb.DynamoDB
