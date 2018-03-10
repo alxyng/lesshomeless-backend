@@ -17,7 +17,7 @@ func handleRequest(context context.Context,
 	offerService, err := helpers.CreateOfferService()
 	if err != nil {
 		log.Printf("error creating user service: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	if request.HTTPMethod == "DELETE" {
@@ -37,7 +37,7 @@ func get(id string, svc offer.OfferService) (events.APIGatewayProxyResponse, err
 	o, err := svc.GetOffer(id)
 	if err != nil {
 		log.Printf("error getting offer: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	if o == nil {
@@ -48,7 +48,7 @@ func get(id string, svc offer.OfferService) (events.APIGatewayProxyResponse, err
 	data, err := json.Marshal(o)
 	if err != nil {
 		log.Printf("error marshalling offer: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	return events.APIGatewayProxyResponse{

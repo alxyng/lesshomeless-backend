@@ -19,13 +19,13 @@ func handleRequest(context context.Context,
 	userService, err := helpers.CreateUserService()
 	if err != nil {
 		log.Printf("error creating user service: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	offerService, err := helpers.CreateOfferService()
 	if err != nil {
 		log.Printf("error creating offer service: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	if request.HTTPMethod == "POST" {
@@ -52,7 +52,7 @@ func post(request events.APIGatewayProxyRequest, userSvc user.UserService, svc o
 	u, err := userSvc.GetUser(userID)
 	if err != nil {
 		log.Printf("error getting user: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 	if u == nil {
 		return helpers.CreateUnauthorizedResponse()
@@ -63,13 +63,13 @@ func post(request events.APIGatewayProxyRequest, userSvc user.UserService, svc o
 	o, err = svc.CreateOffer(o)
 	if err != nil {
 		log.Printf("error getting offer: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	data, err := json.Marshal(o)
 	if err != nil {
 		log.Printf("error marshalling offer: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	return events.APIGatewayProxyResponse{
@@ -82,13 +82,13 @@ func get(svc offer.OfferService) (events.APIGatewayProxyResponse, error) {
 	offers, err := svc.GetAllOffers()
 	if err != nil {
 		log.Printf("error getting all offers: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	data, err := json.Marshal(offers)
 	if err != nil {
 		log.Printf("error marshalling offers: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	return events.APIGatewayProxyResponse{

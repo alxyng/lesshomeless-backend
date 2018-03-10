@@ -21,7 +21,7 @@ func handleRequest(context context.Context,
 	userService, err := helpers.CreateUserService()
 	if err != nil {
 		log.Printf("error creating user service: %v\n", err)
-		return helpers.CreateErrorResponse()
+		return helpers.CreateInternalServerErrorResponse()
 	}
 
 	_, ok := request.Headers["Authorization"]
@@ -29,7 +29,7 @@ func handleRequest(context context.Context,
 		u, err := userService.CreateUser()
 		if err != nil {
 			log.Printf("error creating user: %v\n", err)
-			return helpers.CreateErrorResponse()
+			return helpers.CreateInternalServerErrorResponse()
 		}
 
 		return createMeResponse(u.Id)
