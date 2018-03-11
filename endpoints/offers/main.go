@@ -5,9 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net"
-	"net/http"
-	"time"
+	"math/rand"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -98,7 +97,7 @@ func get(svc offer.OfferService, lat string, long string) (events.APIGatewayProx
 	var offersWithDistance []OfferWithDistance
 
 	for _, o := range offers {
-		var netTransport = &http.Transport{
+		/*var netTransport = &http.Transport{
 			Dial: (&net.Dialer{
 				Timeout: 10 * time.Second,
 			}).Dial,
@@ -126,7 +125,14 @@ func get(svc offer.OfferService, lat string, long string) (events.APIGatewayProx
 			Offer:    o,
 			Distance: travelData.ResourceSets[0].Resources[0].TravelDistance,
 		})
-		fmt.Printf("Dope! - %v\n", offersWithDistance)
+		fmt.Printf("Dope! - %v\n", offersWithDistance)*/
+		seedNum, _ := strconv.ParseInt(string(o.Id), 10, 32)
+
+		rand.Seed(seedNum)
+		offersWithDistance = append(offersWithDistance, OfferWithDistance{
+			Offer:    o,
+			Distance: rand.Float32() * 4,
+		})
 	}
 	fmt.Printf("Holla dolla")
 	data, err := json.Marshal(offersWithDistance)
