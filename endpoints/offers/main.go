@@ -94,7 +94,7 @@ func get(svc offer.OfferService, lat string, long string) (events.APIGatewayProx
 		return helpers.CreateInternalServerErrorResponse()
 	}
 
-	var offersWithDistance []OfferWithDistance
+	offersWithDistance := make([]OfferWithDistance, 0)
 
 	for _, o := range offers {
 		/*var netTransport = &http.Transport{
