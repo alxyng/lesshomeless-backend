@@ -64,6 +64,11 @@ func handleRequest(context context.Context,
 }
 
 func patch(offerService offer.OfferService, offer *models.Offer) (events.APIGatewayProxyResponse, error) {
+	if offer.Reservation == nil {
+		log.Printf("cannot acknowledge offer without reservation\n")
+		return helpers.CreateBadRequestResponse()
+	}
+
 	offer, err := offerService.AcknowledgeReservation(*offer)
 	if err != nil {
 		log.Printf("failed to reserve offer: %v\n", err)
