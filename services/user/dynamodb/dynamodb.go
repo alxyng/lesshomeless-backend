@@ -131,3 +131,28 @@ func (s DynamoDBUserService) RemoveReservationFromUser(user *models.User, offerI
 
 	return user, nil
 }
+
+func (s DynamoDBUserService) RemoveOfferFromUser(user *models.User, offerID string) (*models.User, error) {
+	for p, v := range user.Offers {
+		if v == offerID {
+			user.Offers[p] = user.Offers[len(user.Offers)-1]
+			user.Offers = user.Offers[:len(user.Offers)-1]
+			break
+		}
+	}
+
+	item, err := dynamodbattribute.MarshalMap(user)
+	if err != nil {
+		return nil, errors.Wrap(err, "error marshalling user")
+	}
+
+	_, err = s.db.PutItem(&dynamodb.PutItemInput{
+		Item:      item,
+		TableName: aws.String(tableName),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "error putting user")
+	}
+
+	return user, nil
+}

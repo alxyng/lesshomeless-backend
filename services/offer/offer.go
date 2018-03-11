@@ -12,5 +12,5 @@ type OfferService interface {
 	AcknowledgeReservation(models.Offer) (*models.Offer, error)
 	CancelReservation(models.Offer) (*models.Offer, error)
 
-	// DeleteOffer(id string) error
+	CancelOffer(string) error
 }

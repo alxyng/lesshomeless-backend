@@ -189,3 +189,21 @@ func (s DynamoDBOfferService) CancelReservation(offer models.Offer) (*models.Off
 
 	return &offer, nil
 }
+
+func (s DynamoDBOfferService) CancelOffer(offerID string) error {
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(offerID),
+			},
+		},
+		TableName: aws.String(tableName),
+	}
+
+	_, err := s.db.DeleteItem(input)
+	if err != nil {
+		return errors.Wrap(err, "error deleting offer")
+	}
+
+	return nil
+}

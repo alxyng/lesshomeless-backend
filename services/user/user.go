@@ -9,4 +9,5 @@ type UserService interface {
 
 	AssignReservationToUser(*models.User, string) (*models.User, error)
 	RemoveReservationFromUser(*models.User, string) (*models.User, error)
+	RemoveOfferFromUser(*models.User, string) (*models.User, error)
 }
