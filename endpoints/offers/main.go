@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -126,10 +125,10 @@ func get(svc offer.OfferService, lat string, long string) (events.APIGatewayProx
 			Distance: travelData.ResourceSets[0].Resources[0].TravelDistance,
 		})
 		fmt.Printf("Dope! - %v\n", offersWithDistance)*/
-		seedNum, _ := strconv.Atoi(string(o.Id)[0])
+		seedNum := []rune(o.Name)[2] //[]rune(o.Name[0])[0]
 		fmt.Printf("Cool - %v\n", seedNum)
 
-		rand.Seed(seedNum)
+		rand.Seed(int64(seedNum))
 		offersWithDistance = append(offersWithDistance, OfferWithDistance{
 			Offer:    o,
 			Distance: rand.Float32() * 4,
