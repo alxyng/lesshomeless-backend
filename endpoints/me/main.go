@@ -5,9 +5,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
-
-	"github.com/satori/uuid"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -54,23 +51,15 @@ func handleRequest(context context.Context,
 		return helpers.CreateInternalServerErrorResponse()
 	}
 
+	reserved, err := offerService.GetOffersById(u.Reserved)
+	if err != nil {
+		log.Printf("error getting user's reserved offers: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
+
 	o := meResponse{
-		Giving: giving,
-		Reserved: &models.Offer{
-			Id:        uuid.NewV4().String(),
-			Name:      string("Hey come reserve this"),
-			CreatedOn: time.Now(),
-			CreatedBy: uuid.NewV4().String(),
-			Location: models.Location{
-				Lat:  52.948956,
-				Long: -1.150940,
-			},
-			Reservation: &models.Reservation{
-				ReservedBy:   uuid.NewV4().String(),
-				ReservedOn:   time.Now(),
-				Acknowledged: false,
-			},
-		},
+		Giving:   giving,
+		Reserved: reserved,
 	}
 
 	data, err := json.Marshal(o)
@@ -86,7 +75,7 @@ func handleRequest(context context.Context,
 
 type meResponse struct {
 	Giving   []models.Offer `json:"giving"`
-	Reserved *models.Offer  `json:"reserved"`
+	Reserved []models.Offer `json:"reserved"`
 	UserID   string         `json:"userId,omitempty"`
 }
 
