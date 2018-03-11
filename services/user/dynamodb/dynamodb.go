@@ -106,3 +106,28 @@ func (s DynamoDBUserService) AssignReservationToUser(user *models.User, offerID 
 
 	return user, nil
 }
+
+func (s DynamoDBUserService) RemoveReservationFromUser(user *models.User, offerID string) (*models.User, error) {
+	for p, v := range user.Reserved {
+		if v == offerID {
+			user.Reserved[p] = user.Reserved[len(user.Reserved)-1]
+			user.Reserved = user.Reserved[:len(user.Reserved)-1]
+			break
+		}
+	}
+
+	item, err := dynamodbattribute.MarshalMap(user)
+	if err != nil {
+		return nil, errors.Wrap(err, "error marshalling user")
+	}
+
+	_, err = s.db.PutItem(&dynamodb.PutItemInput{
+		Item:      item,
+		TableName: aws.String(tableName),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "error putting user")
+	}
+
+	return user, nil
+}

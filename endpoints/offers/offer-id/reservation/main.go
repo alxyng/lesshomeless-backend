@@ -56,6 +56,8 @@ func handleRequest(context context.Context,
 
 	if request.HTTPMethod == "PATCH" {
 		return patch(offerService, offer)
+	} else if request.HTTPMethod == "DELETE" {
+		return delete(offerService, userService, offer, user)
 	} else {
 		return post(offerService, userService, offer, user)
 	}
@@ -65,6 +67,31 @@ func patch(offerService offer.OfferService, offer *models.Offer) (events.APIGate
 	offer, err := offerService.AcknowledgeReservation(*offer)
 	if err != nil {
 		log.Printf("failed to reserve offer: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
+
+	data, err := json.Marshal(offer)
+	if err != nil {
+		log.Printf("error marshalling offer: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
+
+	return events.APIGatewayProxyResponse{
+		Body:       string(data),
+		StatusCode: 200,
+	}, nil
+}
+
+func delete(offerService offer.OfferService, userService user.UserService, offer *models.Offer, user *models.User) (events.APIGatewayProxyResponse, error) {
+	offer, err := offerService.CancelReservation(*offer)
+	if err != nil {
+		log.Printf("failed to cancel reservation: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
+
+	user, err = userService.RemoveReservationFromUser(user, offer.Id)
+	if err != nil {
+		log.Printf("failed to remove reservation from user: %v\n", err)
 		return helpers.CreateInternalServerErrorResponse()
 	}
 

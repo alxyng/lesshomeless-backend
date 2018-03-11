@@ -170,3 +170,22 @@ func (s DynamoDBOfferService) AcknowledgeReservation(offer models.Offer) (*model
 
 	return &offer, nil
 }
+
+func (s DynamoDBOfferService) CancelReservation(offer models.Offer) (*models.Offer, error) {
+	offer.Reservation = nil
+
+	item, err := dynamodbattribute.MarshalMap(offer)
+	if err != nil {
+		return nil, errors.Wrap(err, "error marshalling offer")
+	}
+
+	_, err = s.db.PutItem(&dynamodb.PutItemInput{
+		Item:      item,
+		TableName: aws.String(tableName),
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "error putting offer")
+	}
+
+	return &offer, nil
+}
