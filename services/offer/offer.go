@@ -8,5 +8,6 @@ type OfferService interface {
 	GetAllOffers() ([]models.Offer, error)
 	GetOffersById([]string) ([]models.Offer, error)
 	ReserveOffer(models.Offer, string) (*models.Offer, error)
+	AcknowledgeReservation(models.Offer) (*models.Offer, error)
 	// DeleteOffer(id string) error
 }

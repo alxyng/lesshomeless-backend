@@ -55,15 +55,27 @@ func handleRequest(context context.Context,
 	}
 
 	if request.HTTPMethod == "PATCH" {
-		return patch(*offer, *user)
+		return patch(offerService, offer)
 	} else {
 		return post(offerService, userService, offer, user)
 	}
 }
 
-func patch(offer models.Offer, user models.User) (events.APIGatewayProxyResponse, error) {
+func patch(offerService offer.OfferService, offer *models.Offer) (events.APIGatewayProxyResponse, error) {
+	offer, err := offerService.AcknowledgeReservation(*offer)
+	if err != nil {
+		log.Printf("failed to reserve offer: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
+
+	data, err := json.Marshal(offer)
+	if err != nil {
+		log.Printf("error marshalling offer: %v\n", err)
+		return helpers.CreateInternalServerErrorResponse()
+	}
 
 	return events.APIGatewayProxyResponse{
+		Body:       string(data),
 		StatusCode: 200,
 	}, nil
 }
