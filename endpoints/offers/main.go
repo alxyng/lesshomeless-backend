@@ -126,7 +126,8 @@ func get(svc offer.OfferService, lat string, long string) (events.APIGatewayProx
 			Distance: travelData.ResourceSets[0].Resources[0].TravelDistance,
 		})
 		fmt.Printf("Dope! - %v\n", offersWithDistance)*/
-		seedNum, _ := strconv.ParseInt(string(o.Id), 10, 32)
+		seedNum, _ := strconv.Atoi(string(o.Id)[0])
+		fmt.Printf("Cool - %v\n", seedNum)
 
 		rand.Seed(seedNum)
 		offersWithDistance = append(offersWithDistance, OfferWithDistance{
